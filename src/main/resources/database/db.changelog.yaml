@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: marceloverdijk
+      changes:
+        - createTable:
+            tableName: todo
+            columns:
+                - column:
+                    name: id
+                    type: bigserial
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: description
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: title
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: completed
+                    type: timestamp

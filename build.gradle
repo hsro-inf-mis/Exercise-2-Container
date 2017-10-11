@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'org.mikeneck.payara-plugin' version '0.0.2'
+    id "com.gmaslowski.gradle.plugin.docker" version "0.3"
+}
+
+group 'de.fhro.mis'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'war'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    providedCompile "fish.payara.extras:payara-micro:$payara_version"
+    providedCompile "javax:javaee-api:$javaee_api_version"
+    compile "com.fasterxml.jackson.module:jackson-module-jsonSchema:$jackson_module_version"
+    compile "postgresql:postgresql:$postgres_driver_version"
+    compile "org.webjars:swagger-ui:$swagger_ui_version"
+    compile "io.swagger:swagger-jaxrs:$swagger_jaxrs_version"
+    compile "io.swagger:swagger-jersey2-jaxrs:$swagger_jaxrs_version"
+    compile "com.thetransactioncompany:cors-filter:$cors_filter_version"
+    compile "org.liquibase:liquibase-core:$liquibase_version"
+    compile "org.yaml:snakeyaml:$snakeyaml_version"
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+}
+
+docker {
+    workingDir "$buildDir/docker"
+    tags = ["mis-week02:latest"]
+    dockerfile = "$projectDir/src/main/docker/Dockerfile"
+    files = [war.archivePath]
+}
+
+payara {
+    httpPort = 8080
+    daemon = false
+}

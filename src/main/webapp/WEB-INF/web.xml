@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <welcome-file-list>
+        <welcome-file>/index.html</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>jersey</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                io.swagger.jaxrs.listing,
+                de.fhro.mis.dockerCompose.api
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jersey</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Jersey2Config</servlet-name>
+        <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+        <init-param>
+            <param-name>api.version</param-name>
+            <param-value>1.0.0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>swagger.api.basepath</param-name>
+            <param-value>/api</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <filter>
+        <filter-name>CORS</filter-name>
+        <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CORS</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <context-param>
+        <param-name>liquibase.changelog</param-name>
+        <param-value>database/db.changelog.yaml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>liquibase.datasource</param-name>
+        <param-value>java:global/JPAPostgresDS</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>liquibase.onerror.fail</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>liquibase.contexts</param-name>
+        <param-value>production</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>liquibase.integration.servlet.LiquibaseServletListener</listener-class>
+    </listener>
+
+    <data-source>
+        <name>java:global/JPAPostgresDS</name>
+        <class-name>org.postgresql.ds.PGPoolingDataSource</class-name>
+        <server-name>${ENV=DB_HOST}</server-name>
+        <port-number>5432</port-number>
+        <database-name>${ENV=JDBC_DB}</database-name>
+        <user>${ENV=JDBC_USER}</user>
+        <!-- Example of using a Payara password alias in the datasource definition -->
+        <password>${ENV=JDBC_PASSWORD}</password>
+        <!-- Example of how to use a Payara specific custom connection pool setting -->
+        <property>
+            <name>fish.payara.slow-query-threshold-in-seconds</name>
+            <value>5</value>
+        </property>
+        <property>
+            <name>fish.payara.log-jdbc-calls</name>
+            <value>true</value>
+        </property>
+        <property>
+            <name>fish.payara.is-connection-validation-required</name>
+            <value>true</value>
+        </property>
+        <property>
+            <name>fish.payara.connection-validation-method</name>
+            <value>custom-validation</value>
+        </property>
+        <property>
+            <name>fish.payara.validation-classname</name>
+            <value>org.glassfish.api.jdbc.validation.PostgresConnectionValidation</value>
+        </property>
+    </data-source>
+</web-app>
