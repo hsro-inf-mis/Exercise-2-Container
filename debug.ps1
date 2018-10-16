@@ -1,5 +1,5 @@
 $payaraJar = "payara-micro.jar"
-$payaraVersion = "4.1.2.173"
+$payaraVersion = "5.183"
 
 $env:DB_HOST = "localhost"
 $env:JDBC_DB = "todo"
@@ -10,7 +10,8 @@ if(-not (Test-Path $payaraJar)){
     $downloadPath = [io.path]::combine((Split-Path -Parent -Path $MyInvocation.MyCommand.Definition), $payaraJar)
     Write-Host $("Downloading Payara Micro to path " + $downloadPath)
     $client = New-Object System.Net.WebClient;
-    $client.DownloadFile($("https://s3-eu-west-1.amazonaws.com/payara.fish/Payara+Downloads/Payara+" + $payaraVersion + "/payara-micro-" + $payaraVersion + ".jar"), $downloadPath);
+    $client.DownloadFile($("https://s3-eu-west-1.amazonaws.com/payara.fish/Payara+Downloads/" + $payaraVersion + "/payara-micro-" + $payaraVersion + ".jar"), $downloadPath);
+
     $client.Dispose()
 }
 
