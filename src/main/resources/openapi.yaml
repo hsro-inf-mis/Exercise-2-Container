@@ -1,0 +1,8 @@
+resourcePackages:
+  - de.fhro.mis.dockerCompose.api
+prettyPrint: true
+cacheTTL: 0
+openAPI:
+  info:
+    version: '1.0'
+    title: MIS sample ToDo app

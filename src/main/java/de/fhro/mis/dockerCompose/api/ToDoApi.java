@@ -4,10 +4,9 @@ import de.fhro.mis.dockerCompose.entities.ToDo;
 import de.fhro.mis.dockerCompose.models.dto.CountResult;
 import de.fhro.mis.dockerCompose.models.dto.ToDoArrayResult;
 import de.fhro.mis.dockerCompose.repository.Repository;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -27,7 +26,6 @@ import java.util.logging.Logger;
  */
 @Stateless
 @Path("todo")
-@Api("ToDo API")
 @Produces(MediaType.APPLICATION_JSON)
 public class ToDoApi {
 
@@ -42,10 +40,10 @@ public class ToDoApi {
 
 	@GET
 	@Path("/")
-	@ApiOperation(value = "Get a page of todos", httpMethod = "GET")
+	@Operation(summary = "Get a page of todos", method = "GET")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Successfully queried todo page", response = ToDoArrayResult.class),
-			@ApiResponse(code = 500, message = "Error while fetching todo page")
+			@ApiResponse(responseCode = "200", description = "Successfully queried todo page"),
+			@ApiResponse(responseCode = "500", description = "Error while fetching todo page")
 	})
 	public Response getAllToDos(
 			@DefaultValue("0")
@@ -69,11 +67,11 @@ public class ToDoApi {
 
 	@GET
 	@Path("{id}")
-	@ApiOperation(value = "Get a specific todo entry", httpMethod = "GET")
+	@Operation(summary = "Get a specific todo entry", method = "GET")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Successfully queried todo entry", response = ToDo.class),
-			@ApiResponse(code = 404, message = "Todo with specified id not found"),
-			@ApiResponse(code = 500, message = "Internal error while querying todo with specified id")
+			@ApiResponse(responseCode = "200", description = "Successfully queried todo entry"),
+			@ApiResponse(responseCode = "404", description = "Todo with specified id not found"),
+			@ApiResponse(responseCode = "500", description = "Internal error while querying todo with specified id")
 	})
 	public Response getToDo(
 			@PathParam("id")
@@ -91,10 +89,10 @@ public class ToDoApi {
 
 	@GET
 	@Path("count")
-	@ApiOperation(value = "Get count of todo entries", httpMethod = "GET")
+	@Operation(summary = "Get count of todo entries", method = "GET")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Successfully queried todo count", response = CountResult.class),
-			@ApiResponse(code = 500, message = "Internal error while querying todo count")
+			@ApiResponse(responseCode = "200", description = "Successfully queried todo count"),
+			@ApiResponse(responseCode = "500", description = "Internal error while querying todo count")
 	})
 	public Response getCount() {
 		return Response.ok(new CountResult(toDoRepository.count())).build();
@@ -102,10 +100,10 @@ public class ToDoApi {
 
 	@POST
 	@Path("/")
-	@ApiOperation(value = "Create a new todo", httpMethod = "POST")
+	@Operation(summary = "Create a new todo", method = "POST")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Successfully created a new todo", response = ToDo.class),
-			@ApiResponse(code = 500, message = "Failed to create new todo")
+			@ApiResponse(responseCode = "200", description = "Successfully created a new todo"),
+			@ApiResponse(responseCode = "500", description = "Failed to create new todo")
 	})
 	public Response createTodo(@Valid ToDo toDoToCreate) {
 		try {
@@ -119,12 +117,12 @@ public class ToDoApi {
 
 	@PUT
 	@Path("{id}/done")
-	@ApiOperation(value = "Mark an existing todo item as done")
+	@Operation(summary = "Mark an existing todo item as done")
 	@ApiResponses({
-			@ApiResponse(code = 204, message = "Updated successfully"),
-			@ApiResponse(code = 404, message = "Todo entry with specified id not found"),
-			@ApiResponse(code = 409, message = "Item already done"),
-			@ApiResponse(code = 500, message = "Internal error while marking todo item as done")
+			@ApiResponse(responseCode = "204", description = "Updated successfully"),
+			@ApiResponse(responseCode = "404", description = "Todo entry with specified id not found"),
+			@ApiResponse(responseCode = "409", description = "Item already done"),
+			@ApiResponse(responseCode = "500", description = "Internal error while marking todo item as done")
 	})
 	public Response markAsDone(@PathParam("id") long id) {
 		ToDo item = toDoRepository.find(id);
@@ -137,11 +135,11 @@ public class ToDoApi {
 
 	@DELETE
 	@Path("{id}")
-	@ApiOperation(value = "Delete a todo entry", httpMethod = "DELETE")
+	@Operation(summary = "Delete a todo entry", method = "DELETE")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Successfully deleted todo entry", response = ToDo.class),
-			@ApiResponse(code = 404, message = "Todo entry with specified id not found"),
-			@ApiResponse(code = 500, message = "Internal error while deleting todo entry")
+			@ApiResponse(responseCode = "200", description = "Successfully deleted todo entry"),
+			@ApiResponse(responseCode = "404", description = "Todo entry with specified id not found"),
+			@ApiResponse(responseCode = "500", description = "Internal error while deleting todo entry")
 	})
 	public Response deleteTodo(
 			@PathParam("id")
